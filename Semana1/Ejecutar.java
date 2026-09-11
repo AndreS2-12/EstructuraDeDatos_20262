@@ -30,6 +30,22 @@ public class Ejecutar {
 
             //Mostrar el arreglo b elevando al cuadrado cada elemento
             System.out.println("b[" + i + "] al cuadrado = " + (b[i] * b[i]));
-        }   
+        }  
+        
+        
+        // Ejercicios Clase 1
+//Dado un arreglo lineal de números, sumar separadamente los números pares y los números impares. 
+        int sumaPares = 0;
+        int sumaImpares = 0;
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] % 2 == 0) {    
+                sumaPares += a[i];
+            } else {
+                sumaImpares += a[i];
+            }
+        }
+        System.out.println("Suma de números PARES:   " + sumaPares);
+        System.out.println("Suma de números IMPARES: " + sumaImpares);
+
     }
 }
