@@ -110,10 +110,31 @@ public class Ejecutar {
         System.out.println("El número " + numero + " se encuentra " + count + " veces en el arreglo.");
 
 //10. Dado un arreglo A de N elementos se desea crear otro arreglo, tal que cada uno de sus elementos sea la suma de los opuestos en el arreglo dado. 
-        int[] e = new int[10];
+        int n = 10;
+        int[] e = new int[n];
+        
+        // 1. Asignar valores al arreglo e (Tu código original)
         for (int j = 0; j < e.length; j++) {
-            e[j] = (int) (Math.random() * 10) + 1; // Asignar valores al arreglo e
+            e[j] = (int) (Math.random() * 10) + 1; 
         }
+
+        // 2. Crear el nuevo arreglo del mismo tamaño
+        int[] arregloSumas = new int[n];
+
+        // 3. Calcular la suma de los opuestos
+        for (int i = 0; i < n; i++) {
+            int indiceOpuesto = n - 1 - i; // Fórmula para encontrar el opuesto
+            arregloSumas[i] = e[i] + e[indiceOpuesto];
+        }
+
+        // 4. Imprimir los resultados para verificar
+        System.out.println("Índice | Valor Original | Valor Opuesto | Suma");
+        System.out.println("------------------------------------------------");
+        for (int i = 0; i < n; i++) {
+            int indiceOpuesto = n - 1 - i;
+            System.out.printf("  %2d   |      %2d      |      %2d     |  %2d%n", i, e[i], e[indiceOpuesto], arregloSumas[i]);
+        }
+    }
 
 //11. Dado un arreglo A de N elementos se desea generar tres arreglos que contengan los elementos negativos, cero y positivos de arreglo initial. 
             int[] f = new int[10];
