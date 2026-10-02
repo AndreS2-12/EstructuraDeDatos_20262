@@ -1,5 +1,7 @@
 package Semana1;
 
+import java.util.Arrays;
+
 public class Ejecutar {
     public static void main(String[] args) {
         System.out.println("Estructuras de Datos UCC!!!");
@@ -135,22 +137,4 @@ public class Ejecutar {
             System.out.printf("  %2d   |      %2d      |      %2d     |  %2d%n", i, e[i], e[indiceOpuesto], arregloSumas[i]);
         }
     }
-
-//11. Dado un arreglo A de N elementos se desea generar tres arreglos que contengan los elementos negativos, cero y positivos de arreglo initial. 
-            int[] f = new int[10];
-            for (int j = 0; j < f.length; j++) {
-                f[j] = (int) (Math.random() * 21) - 10; // Asignar valores al arreglo f entre -10 y 10
-            }
-            
-//15. Se tienen los nombres y los sueldos de los trabajadores de una empresa. Se desea saber cuántos y quiénes tienen un sueldo promedio. 
-            indexImpares = 0;
-            indexPares = 0;
-            String[] nombres = {"Juan", "María", "Pedro", "Ana", "Luis", "Carmen", "Jorge", "Lucía", "Miguel", "Sofía"};
-            double[] sueldos = {1500.0, 2000.0, 1800.0, 2200.0, 2500.0, 1700.0, 1900.0, 2100.0, 2300.0, 1600.0};
-            double sumaSueldos = 0;
-            for (int j = 0; j < sueldos.length; j++) {
-                sumaSueldos += sueldos[j];
-                
-            }
-        }
-    }
+}
