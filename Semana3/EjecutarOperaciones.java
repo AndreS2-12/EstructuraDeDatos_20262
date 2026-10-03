@@ -1,5 +1,4 @@
-import Semana3.OperacionesMatrices;
-
+package Semana3;
 public class EjecutarOperaciones {
 
     public static void main(String[] args) {
