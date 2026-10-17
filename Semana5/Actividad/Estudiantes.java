@@ -1,8 +1,17 @@
+package Semana5.Actividad;
+//Actividad 1. Arreglos de objetos: Gestión de estudiantes
+    //Desarrolle una aplicación que permita administrar la información académica de un grupo de hasta 10 estudiantes.
+    //Cada estudiante debe tener código, nombre, programa académico y promedio.
+    //Requerimientos:
+    //•	Registrar y listar estudiantes.
+    //•	Buscar un estudiante por código.
+    //•	Mostrar los estudiantes con promedio igual o superior a 4.0.
+    //•	Identificar al estudiante con el promedio más alto.
+
 import java.util.*;
+import java.util.Scanner;
 public class Estudiantes {
-
     public static void main(String[] args) {
-
         Scanner entrada = new Scanner(System.in);
 
         // Creacion de los arreglos
@@ -157,14 +166,11 @@ public class Estudiantes {
                 case 6:
                     System.out.println("Programa finalizado.");
                     break;
-
                 default:
                     System.out.println("Opcion no valida.");
                     break;
             }
-
         } while (opcion != 6);
-
         entrada.close();
     }
 }
