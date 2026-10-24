@@ -1,5 +1,4 @@
 package Semana7;
-
 import java.util.*;
 
 public class Aplicacion {
@@ -21,5 +20,15 @@ public class Aplicacion {
         System.out.println(estudiante.replace(856589, "Jhon Cano"));
         System.out.println(estudiante);
 
+                for (Integer key : estudiante.keySet()) {
+            System.out.println("Clave: " + key + " --> Valor: " + estudiante.get(key));
+        }
+        /*
+        Iterator est = estudiantes.keySet().iterator();
+        while(est.hasNext()){
+        Integer key = (Integer) est.next();
+        System.out.println("Clave: " + key + " Valor: " + estudiantes.get(key));
+        }
+        */      
     }
 }
