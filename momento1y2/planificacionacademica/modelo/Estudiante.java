@@ -1,9 +1,11 @@
 package momento1y2.planificacionacademica.modelo;
 import java.util.*;
+import momento1y2.planificacionacademica.estructuras.ListaEnlazada;   // NUEVO
 
 /**
- * Estudiante universitario. Hereda de Persona y agrega el semestre actual
- * y las notas por semestre en una matriz Double[10][20].
+ * Estudiante universitario. Hereda de Persona y agrega el semestre actual,
+ * las notas por semestre en una matriz Double[10][20] y el historial
+ * de materias cursadas en una lista enlazada.
  */
 public class Estudiante extends Persona {
 
@@ -20,6 +22,9 @@ public class Estudiante extends Persona {
 
     // Matriz paralela: codigosMaterias[f][c] es la materia de notas[f][c]
     private final String[][] codigosMaterias = new String[MAX_SEMESTRES][MAX_MATERIAS];
+
+    // NUEVO: códigos de las materias cursadas, sin repetir, en orden de registro
+    private final ListaEnlazada<String> historialMaterias = new ListaEnlazada<>();
 
     /**
      * Crea un estudiante.
@@ -46,6 +51,7 @@ public class Estudiante extends Persona {
 
     /**
      * Registra (o actualiza) la nota de una materia en un semestre.
+     * Si la materia es nueva para el estudiante, también entra al historial.
      *
      * @param semestre      semestre de 1 a 10
      * @param codigoMateria código de la materia, por ejemplo CALC101
@@ -82,6 +88,11 @@ public class Estudiante extends Persona {
         }
         codigosMaterias[fila][columnaLibre] = codigo;
         notas[fila][columnaLibre] = nota;
+
+        // NUEVO: la materia entra al historial solo la primera vez
+        if (!historialMaterias.contiene(codigo)) {
+            historialMaterias.agregarAlFinal(codigo);
+        }
     }
 
     /**
@@ -144,6 +155,55 @@ public class Estudiante extends Persona {
     /** Cantidad de materias con nota menor a 3.0. */
     public int contarReprobadas() {
         return contarSegunAprobacion(false);
+    }
+
+    // ---------- NUEVO: historial de materias ----------
+
+    /** Indica si el estudiante ya cursó la materia (tiene alguna nota registrada). */
+    public boolean haCursado(String codigoMateria) {
+        if (codigoMateria == null) {
+            return false;
+        }
+        return historialMaterias.contiene(codigoMateria.trim().toUpperCase());
+    }
+
+    /**
+     * Indica si el estudiante aprobó la materia en algún semestre
+     * (nota mayor o igual a 3.0). Sirve para validar pre-requisitos.
+     */
+    public boolean haAprobado(String codigoMateria) {
+        if (codigoMateria == null) {
+            return false;
+        }
+        String codigo = codigoMateria.trim().toUpperCase();
+        for (int fila = 0; fila < MAX_SEMESTRES; fila++) {
+            for (int col = 0; col < MAX_MATERIAS; col++) {
+                if (codigo.equals(codigosMaterias[fila][col])
+                        && notas[fila][col] != null
+                        && notas[fila][col] >= NOTA_APROBATORIA) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /** Cantidad de materias distintas que ha cursado. */
+    public int getCantidadMateriasCursadas() {
+        return historialMaterias.tamano();
+    }
+
+    /** Imprime el historial de materias cursadas, numerado. */
+    public void mostrarHistorial() {
+        if (historialMaterias.estaVacia()) {
+            System.out.println("Sin materias cursadas aun.");
+            return;
+        }
+        int numero = 1;
+        for (String codigo : historialMaterias) {
+            System.out.println(numero + ". " + codigo);
+            numero++;
+        }
     }
 
     // ---------- Polimorfismo ----------
