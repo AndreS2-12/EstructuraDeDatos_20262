@@ -1,72 +1,135 @@
+
 package momento1y2.planificacionacademica;
 
-import java.util.Locale;
-import java.util.NoSuchElementException;
-
-import momento1y2.planificacionacademica.estructuras.ListaEnlazada;
-import momento1y2.planificacionacademica.estructuras.Pila;
 import momento1y2.planificacionacademica.modelo.Estudiante;
-import momento1y2.planificacionacademica.modelo.Facultad;
-import momento1y2.planificacionacademica.modelo.Persona;
-import momento1y2.planificacionacademica.modelo.Profesor;
 import momento1y2.planificacionacademica.modelo.Materia;
-import momento1y2.planificacionacademica.excepciones.*;
-import momento1y2.planificacionacademica.excepciones.HorarioConflictivoException;
-import momento1y2.planificacionacademica.modelo.Aula;
+
+import momento1y2.planificacionacademica.estructuras.GestorEstudiantes;
+import momento1y2.planificacionacademica.estructuras.GestorMaterias;
+import momento1y2.planificacionacademica.estructuras.GestorDeshacerRehacer;
+import momento1y2.planificacionacademica.estructuras.OperacionInscripcion;
+
+import momento1y2.planificacionacademica.servicio.InscripcionService;
 
 public class Main {
 
-    // Intenta reservar y maneja el conflicto sin que el programa se caiga
-    private static void intentarReservar(Aula aula, int dia, int hora, int duracion) {
-        try {
-            aula.reservar(dia, hora, duracion);
-            System.out.println("Reserva exitosa.");
-        } catch (HorarioConflictivoException e) {
-            System.out.println("Error: " + e.getClass().getSimpleName() + " - " + e.getMessage());
-        }
-    }
-
     public static void main(String[] args) {
-        Aula aula = new Aula("101", 30);
-        System.out.println(aula);
 
-        System.out.println("--- Reservar Lunes 8:00 por 2 horas ---");
-        for (int h = 8; h < 10; h++) {
-            String estado = aula.consultarDisponibilidad(1, h) ? "LIBRE" : "OCUPADO";
-            System.out.println(Aula.nombreDia(1) + " " + h + ":00 -> " + estado);
-        }
-        intentarReservar(aula, 1, 8, 2);
+        // 1. Crear los gestores
+        GestorEstudiantes gestorEstudiantes =
+                new GestorEstudiantes();
 
-        System.out.println("--- Intento conflictivo: Lunes 9:00 por 2 horas ---");
-        intentarReservar(aula, 1, 9, 2);
-        System.out.println("¿Lunes 10:00 sigue libre? " + aula.consultarDisponibilidad(1, 10));
+        GestorMaterias gestorMaterias =
+                new GestorMaterias();
 
-        System.out.println("--- Reservar Miercoles 14:00 por 3 horas ---");
-        intentarReservar(aula, 3, 14, 3);
-        aula.mostrarOcupacion();
+        // 2. Crear un estudiante
+        Estudiante estudiante = new Estudiante(
+                "Ana Gómez",
+                "12345",
+                "ana@gmail.com",
+                2
+        );
 
-        System.out.println("--- Liberar Lunes 8:00 por 2 horas ---");
-        aula.liberar(1, 8, 2);
-        aula.mostrarOcupacion();
+        // 3. Crear una materia
+        Materia materia = new Materia(
+                "PROG101",
+                "Programación I",
+                4,
+                2
+        );
 
-        System.out.println("--- Reservar Lunes 9:00 de nuevo ---");
-        intentarReservar(aula, 1, 9, 2);
+        // 4. Registrar estudiante y materia
+        gestorEstudiantes.registrar(estudiante);
+        gestorMaterias.registrar(materia);
 
-        // Validaciones
-        try {
-            aula.consultarDisponibilidad(7, 8);
-        } catch (IllegalArgumentException e) {
-            System.out.println("Error controlado: " + e.getMessage());
-        }
-        try {
-            aula.reservar(1, 23, 2);
-        } catch (IllegalArgumentException | HorarioConflictivoException e) {
-            System.out.println("Error controlado: " + e.getMessage());
-        }
-        try {
-            aula.liberar(1, 12, 1);
-        } catch (IllegalStateException e) {
-            System.out.println("Error controlado: " + e.getMessage());
-        }
+        // 5. Crear el servicio de inscripciones
+        InscripcionService servicioInscripcion =
+                new InscripcionService(
+                        gestorEstudiantes,
+                        gestorMaterias
+                );
+
+        // 6. Crear el gestor de deshacer y rehacer
+        GestorDeshacerRehacer gestorOperaciones =
+                new GestorDeshacerRehacer();
+
+        System.out.println("===== SISTEMA ACADÉMICO =====");
+
+        // 7. Mostrar información del estudiante
+        System.out.println("\n--- ESTUDIANTE ---");
+        estudiante.mostrarInformacion();
+
+        // 8. Mostrar información de la materia
+        System.out.println("\n--- MATERIA ---");
+        System.out.println("Nombre: " + materia.getNombre());
+        System.out.println("Código: " + materia.getCodigo());
+        System.out.println(
+                "Cupos disponibles: "
+                + materia.getCuposDisponibles()
+        );
+
+        // 9. Crear operación de inscripción
+        System.out.println("\n--- REALIZAR INSCRIPCIÓN ---");
+
+        OperacionInscripcion operacion =
+                new OperacionInscripcion(
+                        servicioInscripcion,
+                        "12345",
+                        "PROG101"
+                );
+
+        gestorOperaciones.ejecutarOperacion(operacion);
+
+        // 10. Consultar inscripciones
+        System.out.println("\n--- LISTADO DE INSCRIPCIONES ---");
+
+        servicioInscripcion.listarInscripciones().forEach(inscripcion -> {
+            System.out.println(
+                    "Estudiante: " + inscripcion.getEstudianteId()
+            );
+            System.out.println(
+                    "Materia: " + inscripcion.getCodigoMateria()
+            );
+            System.out.println(
+                    "Estado: " + inscripcion.getEstado()
+            );
+            System.out.println("---------------------------");
+        });
+
+        // 11. Deshacer inscripción
+        System.out.println("\n--- DESHACER OPERACIÓN ---");
+
+        gestorOperaciones.deshacer();
+
+        // 12. Consultar nuevamente
+        System.out.println("\n--- INSCRIPCIONES DESPUÉS DE DESHACER ---");
+
+        servicioInscripcion.listarInscripciones().forEach(inscripcion -> {
+            System.out.println(
+                    "Estado: " + inscripcion.getEstado()
+            );
+        });
+
+        // 13. Rehacer inscripción
+        System.out.println("\n--- REHACER OPERACIÓN ---");
+
+        gestorOperaciones.rehacer();
+
+        // 14. Consultar resultado final
+        System.out.println("\n--- ESTADO FINAL ---");
+
+        servicioInscripcion.listarInscripciones().forEach(inscripcion -> {
+            System.out.println(
+                    "Estudiante: " + inscripcion.getEstudianteId()
+            );
+            System.out.println(
+                    "Materia: " + inscripcion.getCodigoMateria()
+            );
+            System.out.println(
+                    "Estado: " + inscripcion.getEstado()
+            );
+        });
+
+        System.out.println("\n===== FIN DE LA PRUEBA =====");
     }
 }
