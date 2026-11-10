@@ -39,8 +39,8 @@ public class Main {
         );
 
         // 4. Registrar estudiante y materia
-        gestorEstudiantes.registrar(estudiante);
-        gestorMaterias.registrar(materia);
+        gestorEstudiantes.registrarEstudiante(estudiante);
+        gestorMaterias.registrarMateria(materia);
 
         // 5. Crear el servicio de inscripciones
         InscripcionService servicioInscripcion =

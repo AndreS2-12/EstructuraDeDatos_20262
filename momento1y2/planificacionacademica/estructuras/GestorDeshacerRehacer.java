@@ -3,37 +3,38 @@ package momento1y2.planificacionacademica.estructuras;
 
 import java.util.Stack;
 
+import momento1y2.planificacionacademica.excepciones.PilaDeshacerVaciaException;
+import momento1y2.planificacionacademica.excepciones.PilaRehacerVaciaException;
+
 public class GestorDeshacerRehacer {
 
     private Stack<Operacion> pilaDeshacer;
     private Stack<Operacion> pilaRehacer;
 
+    // Constructor
     public GestorDeshacerRehacer() {
-
         pilaDeshacer = new Stack<>();
         pilaRehacer = new Stack<>();
     }
 
-    // Registrar y ejecutar una operación
+    // Ejecutar y registrar una operación
     public void ejecutarOperacion(Operacion operacion) {
 
         operacion.ejecutar();
 
         pilaDeshacer.push(operacion);
 
-        // Una nueva operación elimina la posibilidad
-        // de rehacer operaciones anteriores
+        // Limpiar la pila de rehacer
         pilaRehacer.clear();
     }
 
     // Deshacer la última operación
-    public void deshacer() {
+    public void deshacer() throws PilaDeshacerVaciaException {
 
         if (pilaDeshacer.isEmpty()) {
-            System.out.println(
-                    "No hay operaciones para deshacer."
+            throw new PilaDeshacerVaciaException(
+                    "No hay operaciones disponibles para deshacer."
             );
-            return;
         }
 
         Operacion operacion = pilaDeshacer.pop();
@@ -45,14 +46,13 @@ public class GestorDeshacerRehacer {
         System.out.println("Operación deshecha correctamente.");
     }
 
-    // Rehacer la última operación deshecha
-    public void rehacer() {
+    // Rehacer la última operación
+    public void rehacer() throws PilaRehacerVaciaException {
 
         if (pilaRehacer.isEmpty()) {
-            System.out.println(
-                    "No hay operaciones para rehacer."
+            throw new PilaRehacerVaciaException(
+                    "No hay operaciones disponibles para rehacer."
             );
-            return;
         }
 
         Operacion operacion = pilaRehacer.pop();
@@ -64,12 +64,12 @@ public class GestorDeshacerRehacer {
         System.out.println("Operación rehecha correctamente.");
     }
 
-    // Consultar si existen operaciones para deshacer
+    // Verificar si hay operaciones para deshacer
     public boolean hayOperacionesParaDeshacer() {
         return !pilaDeshacer.isEmpty();
     }
 
-    // Consultar si existen operaciones para rehacer
+    // Verificar si hay operaciones para rehacer
     public boolean hayOperacionesParaRehacer() {
         return !pilaRehacer.isEmpty();
     }
