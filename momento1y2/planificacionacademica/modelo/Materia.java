@@ -1,6 +1,8 @@
+
 package momento1y2.planificacionacademica.modelo;
 
 import java.util.LinkedList;
+import java.util.Queue;
 
 public class Materia {
 
@@ -13,7 +15,7 @@ public class Materia {
 
     private LinkedList<String> estudiantesInscritos;
 
-    private LinkedList<String> colaEspera;
+    private Queue<String> colaEspera;
 
     public Materia(String codigo, String nombre,
                 int creditos, int cuposMaximos) {
@@ -52,7 +54,7 @@ public class Materia {
         return estudiantesInscritos;
     }
 
-    public LinkedList<String> getColaEspera() {
+    public Queue<String> getColaEspera() {
         return colaEspera;
     }
 

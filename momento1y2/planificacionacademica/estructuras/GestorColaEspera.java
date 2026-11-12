@@ -1,3 +1,4 @@
+
 package momento1y2.planificacionacademica.estructuras;
 
 import java.util.LinkedList;
@@ -9,9 +10,21 @@ public class GestorColaEspera {
 
     private Queue<String> cola;
 
-    // Constructor
+    // Constructor para crear una cola nueva
     public GestorColaEspera() {
         cola = new LinkedList<>();
+    }
+
+    // Constructor para compartir la cola de una materia
+    public GestorColaEspera(Queue<String> colaCompartida) {
+
+        if (colaCompartida == null) {
+            throw new IllegalArgumentException(
+                    "La cola compartida no puede ser nula."
+            );
+        }
+
+        this.cola = colaCompartida;
     }
 
     // Agregar un estudiante a la cola
@@ -45,25 +58,21 @@ public class GestorColaEspera {
 
     // Consultar el siguiente estudiante sin retirarlo
     public String consultarSiguiente() {
-
         return cola.peek();
     }
 
     // Eliminar un estudiante específico
     public boolean eliminarEstudiante(String idEstudiante) {
-
         return cola.remove(idEstudiante);
     }
 
     // Verificar si la cola está vacía
     public boolean estaVacia() {
-
         return cola.isEmpty();
     }
 
     // Consultar cantidad de estudiantes
     public int cantidadEstudiantes() {
-
         return cola.size();
     }
 }

@@ -20,11 +20,19 @@ public class GestorDeshacerRehacer {
     // Ejecutar y registrar una operación
     public void ejecutarOperacion(Operacion operacion) {
 
+        if (operacion == null) {
+            throw new IllegalArgumentException(
+                    "La operación no puede ser nula."
+            );
+        }
+
+        // Primero se ejecuta la operación
         operacion.ejecutar();
 
+        // Si no ocurre ningún error, se guarda en la pila
         pilaDeshacer.push(operacion);
 
-        // Limpiar la pila de rehacer
+        // Una nueva operación elimina la posibilidad de rehacer
         pilaRehacer.clear();
     }
 
@@ -37,10 +45,14 @@ public class GestorDeshacerRehacer {
             );
         }
 
-        Operacion operacion = pilaDeshacer.pop();
+        // Consultar la última operación sin eliminarla todavía
+        Operacion operacion = pilaDeshacer.peek();
 
+        // Ejecutar la acción de deshacer
         operacion.deshacer();
 
+        // Si se completa correctamente, moverla a la otra pila
+        pilaDeshacer.pop();
         pilaRehacer.push(operacion);
 
         System.out.println("Operación deshecha correctamente.");
@@ -55,10 +67,14 @@ public class GestorDeshacerRehacer {
             );
         }
 
-        Operacion operacion = pilaRehacer.pop();
+        // Consultar la última operación sin eliminarla todavía
+        Operacion operacion = pilaRehacer.peek();
 
+        // Ejecutar nuevamente la operación
         operacion.ejecutar();
 
+        // Si se completa correctamente, moverla a la otra pila
+        pilaRehacer.pop();
         pilaDeshacer.push(operacion);
 
         System.out.println("Operación rehecha correctamente.");

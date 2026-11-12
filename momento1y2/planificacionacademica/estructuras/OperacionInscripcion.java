@@ -2,6 +2,8 @@
 package momento1y2.planificacionacademica.estructuras;
 
 import momento1y2.planificacionacademica.servicio.InscripcionService;
+import momento1y2.planificacionacademica.excepciones.EstudianteNoEncontradoException;
+import momento1y2.planificacionacademica.excepciones.PreRequisitoNoAprobadoException;
 
 public class OperacionInscripcion implements Operacion {
 
@@ -28,10 +30,13 @@ public class OperacionInscripcion implements Operacion {
                     codigoMateria
             );
 
-        } catch (Exception e) {
-            System.out.println(
-                    "Error al realizar la inscripción: "
-                    + e.getMessage()
+        } catch (EstudianteNoEncontradoException
+                | PreRequisitoNoAprobadoException e) {
+
+            throw new IllegalStateException(
+                    "No se pudo realizar la inscripción: "
+                    + e.getMessage(),
+                    e
             );
         }
     }
